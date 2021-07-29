@@ -10,6 +10,8 @@ public interface ShipService {
 
     List<Ship> getAll();
 
+    List<Ship> getAll(String status);
+
     Optional<Ship> findById(Long id);
 
     void deleteById(Long id);

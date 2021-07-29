@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ShipServiceImpl implements ShipService{
@@ -21,6 +22,13 @@ public class ShipServiceImpl implements ShipService{
     @Override
     public List<Ship> getAll() {
         return shipRepository.findAll();
+    }
+
+    @Override
+    public List<Ship> getAll(String status) {
+        return shipRepository.findAll().stream()
+                .filter(ship -> ship.getStatus().name().equals(status))
+                .collect(Collectors.toList());
     }
 
     @Override
