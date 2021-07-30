@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * {@inheritDoc}
+ */
 @Service
 public class PortServiceImpl implements PortService{
 
@@ -17,16 +20,25 @@ public class PortServiceImpl implements PortService{
         this.portRepository = portRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Port> getAll() {
         return portRepository.findAll();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Port> findById(Long id) {
         return portRepository.findById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getPortCapacity(Long id) {
         if (!portRepository.existsById(id)) throw new ResourceNotFoundException("Port is not found");

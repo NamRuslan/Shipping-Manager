@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * {@inheritDoc}
+ */
 @Service
 public class ShipServiceImpl implements ShipService{
 
@@ -19,11 +22,17 @@ public class ShipServiceImpl implements ShipService{
         this.shipRepository = shipRepository;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Ship> getAll() {
         return shipRepository.findAll();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Ship> getAll(String status) {
         return shipRepository.findAll().stream()
@@ -31,21 +40,33 @@ public class ShipServiceImpl implements ShipService{
                 .collect(Collectors.toList());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Ship> findById(Long id) {
         return shipRepository.findById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteById(Long id) {
         shipRepository.deleteById(id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void save(Ship ship) {
         shipRepository.save(ship);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateStatus(Long id, ShipStatus status) {
         if (!shipRepository.existsById(id)) throw new ResourceNotFoundException("Ship is not found");
@@ -55,6 +76,9 @@ public class ShipServiceImpl implements ShipService{
         shipRepository.save(ship);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ShipStatus getStatus(Long id) {
         if (!shipRepository.existsById(id)) throw new ResourceNotFoundException("Ship is not found");
