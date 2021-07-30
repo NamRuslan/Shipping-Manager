@@ -52,6 +52,7 @@ public class ShipServiceImpl implements ShipService{
 
         Ship ship = shipRepository.getById(id);
         ship.setStatus(status);
+        shipRepository.save(ship);
     }
 
     @Override

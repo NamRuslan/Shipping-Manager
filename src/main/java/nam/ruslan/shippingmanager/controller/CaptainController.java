@@ -1,5 +1,6 @@
 package nam.ruslan.shippingmanager.controller;
 
+import nam.ruslan.shippingmanager.dto.ShipStatusDto;
 import nam.ruslan.shippingmanager.exception.ResourceNotFoundException;
 import nam.ruslan.shippingmanager.model.ShipStatus;
 import nam.ruslan.shippingmanager.service.ShipService;
@@ -30,10 +31,11 @@ public class CaptainController {
     }
 
     @PatchMapping("/ships/{id}/status")
-    public ResponseEntity<?> updateShipStatus(@PathVariable Long id, @RequestBody ShipStatus status) {
+    public ResponseEntity<?> updateShipStatus(@PathVariable Long id, @RequestBody ShipStatusDto status) {
 
         try {
-            shipService.updateStatus(id, status);
+            System.out.println(status.getStatus());
+            shipService.updateStatus(id, status.getStatus());
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

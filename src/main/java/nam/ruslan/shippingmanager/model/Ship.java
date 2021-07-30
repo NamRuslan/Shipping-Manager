@@ -17,6 +17,7 @@ public class Ship {
     private Long portId;
 
     @Column
+    @Enumerated(EnumType.STRING)
     private ShipStatus status;
 
     public Ship() {
