@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ShipRepository extends JpaRepository<Ship, Long> {
+    int countByPortId(Long id);
 }

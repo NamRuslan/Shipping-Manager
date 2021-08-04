@@ -1,8 +1,10 @@
 package nam.ruslan.shippingmanager.service;
 
+import nam.ruslan.shippingmanager.dto.PortDto;
 import nam.ruslan.shippingmanager.exception.ResourceNotFoundException;
 import nam.ruslan.shippingmanager.model.Port;
 import nam.ruslan.shippingmanager.repository.PortRepository;
+import nam.ruslan.shippingmanager.repository.ShipRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,9 +17,11 @@ import java.util.Optional;
 public class PortServiceImpl implements PortService{
 
     private final PortRepository portRepository;
+    private final ShipRepository shipRepository;
 
-    public PortServiceImpl(PortRepository portRepository) {
+    public PortServiceImpl(PortRepository portRepository, ShipRepository shipRepository) {
         this.portRepository = portRepository;
+        this.shipRepository = shipRepository;
     }
 
     /**
@@ -40,8 +44,12 @@ public class PortServiceImpl implements PortService{
      * {@inheritDoc}
      */
     @Override
-    public int getPortCapacity(Long id) {
+    public PortDto getPortCapacity(Long id) {
         if (!portRepository.existsById(id)) throw new ResourceNotFoundException("Port is not found");
-        return portRepository.getById(id).getCapacity();
+
+        int maxCap = portRepository.getById(id).getCapacity();
+        int occupiedCap = shipRepository.countByPortId(id);
+
+        return new PortDto(maxCap, occupiedCap, maxCap - occupiedCap);
     }
 }

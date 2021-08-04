@@ -1,5 +1,9 @@
 package nam.ruslan.shippingmanager.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import nam.ruslan.shippingmanager.dto.ShipStatusDto;
 import nam.ruslan.shippingmanager.exception.ResourceNotFoundException;
 import nam.ruslan.shippingmanager.model.ShipStatus;
@@ -9,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Api(tags = {"Captain's service"})
 public class CaptainController {
 
     private final ShipService shipService;
@@ -18,6 +23,16 @@ public class CaptainController {
     }
 
     @GetMapping("/ships/{id}/status")
+    @ApiOperation(
+            value = "Get status of ship",
+            httpMethod = "GET",
+            produces = "application/json",
+            response = String.class
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 500, message = "Server error")
+    })
     public ResponseEntity<?> getShipStatus(@PathVariable Long id) {
 
         ShipStatus status;
@@ -31,6 +46,15 @@ public class CaptainController {
     }
 
     @PatchMapping("/ships/{id}/status")
+    @ApiOperation(
+            value = "Change status of ship",
+            httpMethod = "PATCH"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 404, message = "Ship is not found"),
+            @ApiResponse(code = 500, message = "Server error")
+    })
     public ResponseEntity<?> updateShipStatus(@PathVariable Long id, @RequestBody ShipStatusDto status) {
 
         try {

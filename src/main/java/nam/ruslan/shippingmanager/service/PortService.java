@@ -1,5 +1,6 @@
 package nam.ruslan.shippingmanager.service;
 
+import nam.ruslan.shippingmanager.dto.PortDto;
 import nam.ruslan.shippingmanager.model.Port;
 
 import java.util.List;
@@ -29,5 +30,5 @@ public interface PortService {
      * @param id {@link Port} id
      * @return {@link Port} capacity
      */
-    int getPortCapacity(Long id);
+    PortDto getPortCapacity(Long id);
 }

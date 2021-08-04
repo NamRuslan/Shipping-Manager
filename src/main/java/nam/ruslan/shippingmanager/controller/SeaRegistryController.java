@@ -1,5 +1,6 @@
 package nam.ruslan.shippingmanager.controller;
 
+import io.swagger.annotations.Api;
 import nam.ruslan.shippingmanager.model.Port;
 import nam.ruslan.shippingmanager.model.Ship;
 import nam.ruslan.shippingmanager.service.PortService;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Api(tags = {"Sea Registry Service"})
 public class SeaRegistryController {
 
     private final PortService portService;
