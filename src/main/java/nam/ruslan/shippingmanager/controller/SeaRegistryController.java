@@ -1,6 +1,6 @@
 package nam.ruslan.shippingmanager.controller;
 
-import io.swagger.annotations.Api;
+import io.swagger.annotations.*;
 import nam.ruslan.shippingmanager.model.Port;
 import nam.ruslan.shippingmanager.model.Ship;
 import nam.ruslan.shippingmanager.service.PortService;
@@ -24,13 +24,37 @@ public class SeaRegistryController {
     }
 
     @GetMapping("/ports")
-    public ResponseEntity<?> getAllPorts() {
+    @ApiOperation(
+            value = "Get all ports info",
+            httpMethod = "GET",
+            produces = "application/json",
+            response = Port.class,
+            responseContainer = "List"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 500, message = "Server error")
+    })
+    public ResponseEntity<List<Port>> getAllPorts() {
         List<Port> list = portService.getAll();
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
     @GetMapping("/ships")
-    public ResponseEntity<?> getAllShips(@RequestParam(name = "status", required = false) String status) {
+    @ApiOperation(
+            value = "Get all ships info with filter",
+            httpMethod = "GET",
+            produces = "application/json",
+            response = Ship.class,
+            responseContainer = "List"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 500, message = "Server error"),
+    })
+    public ResponseEntity<List<Ship>> getAllShips(
+            @ApiParam(value = "String: ship status", name = "status")
+            @RequestParam(name = "status", required = false) String status) {
 
         List<Ship> list;
 
@@ -44,13 +68,35 @@ public class SeaRegistryController {
     }
 
     @PostMapping("/ships")
-    public ResponseEntity<?> addShip(@RequestBody Ship ship) {
+    @ApiOperation(
+            value = "Add new ship",
+            httpMethod = "POST"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Ship successfully added"),
+            @ApiResponse(code = 500, message = "Server error")
+    })
+    public ResponseEntity<?> addShip(
+            @ApiParam(value = "JSON - structured ship object", name = "ship", required = true)
+            @RequestBody Ship ship) {
+
         shipService.save(ship);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/ships/{id}")
-    public ResponseEntity<?> deleteShip(@PathVariable Long id) {
+    @ApiOperation(
+            value = "Delete ship",
+            httpMethod = "DELETE"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 500, message = "Sever error")
+    })
+    public ResponseEntity<?> deleteShip(
+            @ApiParam(value = "Ship id", name = "id", required = true)
+            @PathVariable Long id) {
+
         shipService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

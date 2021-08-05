@@ -1,9 +1,6 @@
 package nam.ruslan.shippingmanager.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import nam.ruslan.shippingmanager.dto.ShipStatusDto;
 import nam.ruslan.shippingmanager.exception.ResourceNotFoundException;
 import nam.ruslan.shippingmanager.model.ShipStatus;
@@ -33,7 +30,9 @@ public class CaptainController {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 500, message = "Server error")
     })
-    public ResponseEntity<?> getShipStatus(@PathVariable Long id) {
+    public ResponseEntity<?> getShipStatus(
+            @ApiParam(value = "Ship id", name = "id", required = true, example = "3")
+            @PathVariable Long id) {
 
         ShipStatus status;
         try {
@@ -55,7 +54,11 @@ public class CaptainController {
             @ApiResponse(code = 404, message = "Ship is not found"),
             @ApiResponse(code = 500, message = "Server error")
     })
-    public ResponseEntity<?> updateShipStatus(@PathVariable Long id, @RequestBody ShipStatusDto status) {
+    public ResponseEntity<?> updateShipStatus(
+            @ApiParam(value = "Ship id", name = "id", required = true, example = "3")
+            @PathVariable Long id,
+            @ApiParam(value = "Ship status", name = "status", required = true, example = "PORT")
+            @RequestBody ShipStatusDto status) {
 
         try {
             System.out.println(status.getStatus());

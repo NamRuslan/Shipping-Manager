@@ -4,7 +4,6 @@ import io.swagger.annotations.*;
 import nam.ruslan.shippingmanager.dto.PortDto;
 import nam.ruslan.shippingmanager.exception.ResourceNotFoundException;
 import nam.ruslan.shippingmanager.service.PortService;
-import nam.ruslan.shippingmanager.service.ShipService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class PortServiceController {
 
     private final PortService portService;
-    private final ShipService shipService;
 
-    public PortServiceController(PortService portService, ShipService shipService) {
+    public PortServiceController(PortService portService) {
         this.portService = portService;
-        this.shipService = shipService;
     }
 
     @GetMapping("/ports/{id}/capacity")
