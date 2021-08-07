@@ -1,6 +1,7 @@
 package nam.ruslan.shippingmanager.controller;
 
 import io.swagger.annotations.*;
+import nam.ruslan.shippingmanager.dto.ShipDto;
 import nam.ruslan.shippingmanager.model.Port;
 import nam.ruslan.shippingmanager.model.Ship;
 import nam.ruslan.shippingmanager.model.ShipStatus;
@@ -53,11 +54,11 @@ public class SeaRegistryController {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 500, message = "Server error"),
     })
-    public ResponseEntity<List<Ship>> getAllShips(
+    public ResponseEntity<List<ShipDto>> getAllShips(
             @ApiParam(value = "String: ship status", name = "status")
             @RequestParam(name = "status", required = false) ShipStatus status) {
 
-        List<Ship> list;
+        List<ShipDto> list;
 
         if (status != null) {
             list = shipService.getAll(status);

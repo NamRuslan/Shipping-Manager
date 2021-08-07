@@ -1,17 +1,20 @@
 package nam.ruslan.shippingmanager.service;
 
+import nam.ruslan.shippingmanager.dto.ShipDto;
 import nam.ruslan.shippingmanager.dto.ShipStatusDto;
-import nam.ruslan.shippingmanager.exception.NoCaptainException;
-import nam.ruslan.shippingmanager.exception.PortIsFullException;
+import nam.ruslan.shippingmanager.exception.CaptainException;
+import nam.ruslan.shippingmanager.exception.PortException;
 import nam.ruslan.shippingmanager.exception.ResourceNotFoundException;
 import nam.ruslan.shippingmanager.model.Ship;
 import nam.ruslan.shippingmanager.model.ShipStatus;
 import nam.ruslan.shippingmanager.repository.PortRepository;
+import nam.ruslan.shippingmanager.repository.SailorRepository;
 import nam.ruslan.shippingmanager.repository.ShipRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * {@inheritDoc}
@@ -21,26 +24,32 @@ public class ShipServiceImpl implements ShipService{
 
     private final ShipRepository shipRepository;
     private final PortRepository portRepository;
+    private final SailorRepository sailorRepository;
 
-    public ShipServiceImpl(ShipRepository shipRepository, PortRepository portRepository) {
+    public ShipServiceImpl(ShipRepository shipRepository, PortRepository portRepository, SailorRepository sailorRepository) {
         this.shipRepository = shipRepository;
         this.portRepository = portRepository;
+        this.sailorRepository = sailorRepository;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Ship> getAll() {
-        return shipRepository.findAll();
+    public List<ShipDto> getAll() {
+        return shipRepository.findAll().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Ship> getAll(ShipStatus status) {
-        return shipRepository.getAllByStatus(status);
+    public List<ShipDto> getAll(ShipStatus status) {
+        return shipRepository.getAllByStatus(status).stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -65,7 +74,7 @@ public class ShipServiceImpl implements ShipService{
     @Override
     public void save(Ship ship) {
         if (isFull(ship.getPortId())) {
-            throw new PortIsFullException("Port is full");
+            throw new PortException("Port is full");
         }
 
         shipRepository.save(ship);
@@ -81,11 +90,11 @@ public class ShipServiceImpl implements ShipService{
         Ship ship = shipRepository.getById(id);
 
         if (status.getStatus() == ShipStatus.SEA){
-            if (!ship.isHasCaptain()) throw new NoCaptainException("Ship is not allowed to sail: no captain");
+            if (!ship.isHasCaptain()) throw new CaptainException("Ship is not allowed to sail: no captain");
             ship.setPortId(null);
 
         } else if (isFull(status.getPortId())) {
-            throw new PortIsFullException("Port is full");
+            throw new PortException("Port is full");
         }
 
         ship.setPortId(status.getPortId());
@@ -105,5 +114,15 @@ public class ShipServiceImpl implements ShipService{
 
     private boolean isFull(Long id) {
         return shipRepository.countByPortId(id) >= portRepository.getById(id).getCapacity();
+    }
+
+    private ShipDto toDto(Ship ship) {
+        return new ShipDto(
+                ship.getId(),
+                ship.getName(),
+                ship.getPortId(),
+                ship.getStatus(),
+                sailorRepository.countByShipId(ship.getId())
+        );
     }
 }

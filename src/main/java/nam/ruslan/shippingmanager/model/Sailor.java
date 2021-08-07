@@ -1,5 +1,4 @@
 package nam.ruslan.shippingmanager.model;
-package nam.ruslan.shippingmanager.model;
 
 import javax.persistence.*;
 
