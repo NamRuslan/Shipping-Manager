@@ -1,5 +1,6 @@
 package nam.ruslan.shippingmanager.service;
 
+import nam.ruslan.shippingmanager.dto.ShipStatusDto;
 import nam.ruslan.shippingmanager.model.Ship;
 import nam.ruslan.shippingmanager.model.ShipStatus;
 
@@ -22,7 +23,8 @@ public interface ShipService {
      * @param status Status of the ship
      * @return List of {@link Ship}
      */
-    List<Ship> getAll(String status);
+    //set this to string in a case
+    List<Ship> getAll(ShipStatus status);
 
     /**
      * Find {@link Ship} with certain id
@@ -48,7 +50,7 @@ public interface ShipService {
      * @param id {@link Ship} id
      * @param status {@link ShipStatus} of {@link Ship}
      */
-    void updateStatus(Long id, ShipStatus status);
+    void updateStatus(Long id, ShipStatusDto status);
 
     /**
      * Get status of {@link Ship} with certain id

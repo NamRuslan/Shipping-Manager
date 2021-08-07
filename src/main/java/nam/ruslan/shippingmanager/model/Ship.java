@@ -20,14 +20,18 @@ public class Ship {
     @Enumerated(EnumType.STRING)
     private ShipStatus status;
 
+    @Column
+    private boolean hasCaptain;
+
     public Ship() {
     }
 
-    public Ship(Long id, String name, Long portId, ShipStatus status) {
+    public Ship(Long id, String name, Long portId, ShipStatus status, boolean hasCaptain) {
         this.id = id;
         this.name = name;
         this.portId = portId;
         this.status = status;
+        this.hasCaptain = hasCaptain;
     }
 
     public Long getId() {
@@ -60,5 +64,13 @@ public class Ship {
 
     public void setStatus(ShipStatus status) {
         this.status = status;
+    }
+
+    public boolean isHasCaptain() {
+        return hasCaptain;
+    }
+
+    public void setHasCaptain(boolean hasCaptain) {
+        this.hasCaptain = hasCaptain;
     }
 }

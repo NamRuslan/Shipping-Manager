@@ -1,14 +1,17 @@
 package nam.ruslan.shippingmanager.service;
 
+import nam.ruslan.shippingmanager.dto.ShipStatusDto;
+import nam.ruslan.shippingmanager.exception.NoCaptainException;
+import nam.ruslan.shippingmanager.exception.PortIsFullException;
 import nam.ruslan.shippingmanager.exception.ResourceNotFoundException;
 import nam.ruslan.shippingmanager.model.Ship;
 import nam.ruslan.shippingmanager.model.ShipStatus;
+import nam.ruslan.shippingmanager.repository.PortRepository;
 import nam.ruslan.shippingmanager.repository.ShipRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * {@inheritDoc}
@@ -17,9 +20,11 @@ import java.util.stream.Collectors;
 public class ShipServiceImpl implements ShipService{
 
     private final ShipRepository shipRepository;
+    private final PortRepository portRepository;
 
-    public ShipServiceImpl(ShipRepository shipRepository) {
+    public ShipServiceImpl(ShipRepository shipRepository, PortRepository portRepository) {
         this.shipRepository = shipRepository;
+        this.portRepository = portRepository;
     }
 
     /**
@@ -34,10 +39,8 @@ public class ShipServiceImpl implements ShipService{
      * {@inheritDoc}
      */
     @Override
-    public List<Ship> getAll(String status) {
-        return shipRepository.findAll().stream()
-                .filter(ship -> ship.getStatus().name().equals(status))
-                .collect(Collectors.toList());
+    public List<Ship> getAll(ShipStatus status) {
+        return shipRepository.getAllByStatus(status);
     }
 
     /**
@@ -61,6 +64,10 @@ public class ShipServiceImpl implements ShipService{
      */
     @Override
     public void save(Ship ship) {
+        if (isFull(ship.getPortId())) {
+            throw new PortIsFullException("Port is full");
+        }
+
         shipRepository.save(ship);
     }
 
@@ -68,11 +75,21 @@ public class ShipServiceImpl implements ShipService{
      * {@inheritDoc}
      */
     @Override
-    public void updateStatus(Long id, ShipStatus status) {
+    public void updateStatus(Long id, ShipStatusDto status) {
         if (!shipRepository.existsById(id)) throw new ResourceNotFoundException("Ship is not found");
 
         Ship ship = shipRepository.getById(id);
-        ship.setStatus(status);
+
+        if (status.getStatus() == ShipStatus.SEA){
+            if (!ship.isHasCaptain()) throw new NoCaptainException("Ship is not allowed to sail: no captain");
+            ship.setPortId(null);
+
+        } else if (isFull(status.getPortId())) {
+            throw new PortIsFullException("Port is full");
+        }
+
+        ship.setPortId(status.getPortId());
+        ship.setStatus(status.getStatus());
         shipRepository.save(ship);
     }
 
@@ -84,5 +101,9 @@ public class ShipServiceImpl implements ShipService{
         if (!shipRepository.existsById(id)) throw new ResourceNotFoundException("Ship is not found");
 
         return shipRepository.getById(id).getStatus();
+    }
+
+    private boolean isFull(Long id) {
+        return shipRepository.countByPortId(id) >= portRepository.getById(id).getCapacity();
     }
 }

@@ -1,5 +1,5 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/shipping-manager
+    url: jdbc:postgresql://localhost:5432/shipping-manager-v2
     username: postgres
     password: 1234

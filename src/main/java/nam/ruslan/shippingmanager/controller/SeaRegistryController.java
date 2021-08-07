@@ -3,6 +3,7 @@ package nam.ruslan.shippingmanager.controller;
 import io.swagger.annotations.*;
 import nam.ruslan.shippingmanager.model.Port;
 import nam.ruslan.shippingmanager.model.Ship;
+import nam.ruslan.shippingmanager.model.ShipStatus;
 import nam.ruslan.shippingmanager.service.PortService;
 import nam.ruslan.shippingmanager.service.ShipService;
 import org.springframework.http.HttpStatus;
@@ -54,11 +55,11 @@ public class SeaRegistryController {
     })
     public ResponseEntity<List<Ship>> getAllShips(
             @ApiParam(value = "String: ship status", name = "status")
-            @RequestParam(name = "status", required = false) String status) {
+            @RequestParam(name = "status", required = false) ShipStatus status) {
 
         List<Ship> list;
 
-        if (status != null && !status.isBlank()) {
+        if (status != null) {
             list = shipService.getAll(status);
         } else {
             list = shipService.getAll();
