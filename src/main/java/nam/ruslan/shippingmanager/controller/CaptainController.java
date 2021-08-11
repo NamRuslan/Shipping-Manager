@@ -91,13 +91,13 @@ public class CaptainController {
             @ApiResponse(code = 500, message = "Server error")
     })
     public ResponseEntity<?> setSailorOn(
-            @ApiParam(value = "Ship id", name = "ship id", required = true, example = "3")
-            @PathVariable("ship") String shipId,
-            @ApiParam(value = "Sailor id", name = "sailor id", required = true, example = "3")
-            @PathVariable("sailor") String sailorId) {
+            @ApiParam(value = "Ship id", name = "ship", required = true, example = "3")
+            @PathVariable("ship") Long shipId,
+            @ApiParam(value = "Sailor id", name = "sailor", required = true, example = "20")
+            @PathVariable("sailor") Long sailorId) {
 
         try {
-            sailorService.setSailorToShip(Long.parseLong(shipId), Long.parseLong(sailorId));
+            sailorService.setSailorToShip(shipId, sailorId);
 
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -121,13 +121,13 @@ public class CaptainController {
             @ApiResponse(code = 500, message = "Server error")
     })
     public ResponseEntity<?> setSailorOff(
-            @ApiParam(value = "Ship id", name = "ship id", required = true, example = "3")
-            @PathVariable("ship") String shipId,
-            @ApiParam(value = "Sailor id", name = "sailor id", required = true, example = "3")
-            @PathVariable("sailor") String sailorId) {
+            @ApiParam(value = "Ship id", name = "ship", required = true, example = "3")
+            @PathVariable("ship") Long shipId,
+            @ApiParam(value = "Sailor id", name = "sailor", required = true, example = "20")
+            @PathVariable("sailor") Long sailorId) {
 
         try {
-            sailorService.setSailorOffShip(Long.parseLong(shipId), Long.parseLong(sailorId));
+            sailorService.setSailorOffShip(shipId, sailorId);
 
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
