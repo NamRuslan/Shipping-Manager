@@ -41,7 +41,7 @@ public class SailorServiceImpl implements SailorService{
             throw new PortException("Crew can only be changed in port");
 
         } else if (sailor.getShipId() != null) {
-            throw new IllegalArgumentException("Sailor is already on other board");
+            throw new IllegalArgumentException("Sailor is already on board");
         }
 
         if (sailor.getRank() == Rank.CAPTAIN) {
@@ -49,7 +49,9 @@ public class SailorServiceImpl implements SailorService{
             ship.setHasCaptain(true);
         }
 
-        sailor.setId(shipId);
+        sailor.setShipId(shipId);
+
+        sailorRepository.save(sailor);
     }
 
     /**
@@ -68,7 +70,7 @@ public class SailorServiceImpl implements SailorService{
         Sailor sailor = sailorRepository.findById(sailorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Sailor with id: " + sailorId + " is not found"));
 
-        if (!sailor.getShipId().equals(shipId)) {
+        if (sailor.getShipId() == null || !sailor.getShipId().equals(shipId)) {
             throw new ResourceNotFoundException("Sailor is not on this ship");
         }
 
@@ -77,6 +79,7 @@ public class SailorServiceImpl implements SailorService{
         }
 
         sailor.setShipId(null);
+        sailorRepository.save(sailor);
     }
 
     /**

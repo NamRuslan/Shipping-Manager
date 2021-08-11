@@ -79,7 +79,7 @@ public class CaptainController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("/ships/{shipId}/sailors/{sailorId}")
+    @PatchMapping("/ships/{ship}/sailors/{sailor}")
     @ApiOperation(
             value = "Set sailor to the ship",
             httpMethod = "PATCH"
@@ -92,12 +92,12 @@ public class CaptainController {
     })
     public ResponseEntity<?> setSailorOn(
             @ApiParam(value = "Ship id", name = "ship id", required = true, example = "3")
-            @PathVariable Long shipId,
+            @PathVariable("ship") String shipId,
             @ApiParam(value = "Sailor id", name = "sailor id", required = true, example = "3")
-            @PathVariable Long sailorId) {
+            @PathVariable("sailor") String sailorId) {
 
         try {
-            sailorService.setSailorToShip(shipId, sailorId);
+            sailorService.setSailorToShip(Long.parseLong(shipId), Long.parseLong(sailorId));
 
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -109,7 +109,7 @@ public class CaptainController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/ships/{shipId}/sailors/{sailorId}")
+    @DeleteMapping("/ships/{ship}/sailors/{sailor}")
     @ApiOperation(
             value = "Set sailor off the ship",
             httpMethod = "DELETE"
@@ -122,12 +122,12 @@ public class CaptainController {
     })
     public ResponseEntity<?> setSailorOff(
             @ApiParam(value = "Ship id", name = "ship id", required = true, example = "3")
-            @PathVariable Long shipId,
+            @PathVariable("ship") String shipId,
             @ApiParam(value = "Sailor id", name = "sailor id", required = true, example = "3")
-            @PathVariable Long sailorId) {
+            @PathVariable("sailor") String sailorId) {
 
         try {
-            sailorService.setSailorOffShip(shipId, sailorId);
+            sailorService.setSailorOffShip(Long.parseLong(shipId), Long.parseLong(sailorId));
 
         } catch (ResourceNotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -139,7 +139,7 @@ public class CaptainController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/ships/{shipId}/sailors")
+    @PostMapping("/sailors")
     @ApiOperation(
             value = "Register new sailor",
             httpMethod = "POST"
@@ -148,7 +148,7 @@ public class CaptainController {
             @ApiResponse(code = 200, message = "OK"),
             @ApiResponse(code = 500, message = "Server error")
     })
-    public ResponseEntity<?> addSailor(@PathVariable Long shipId, @RequestBody Sailor sailor) {
+    public ResponseEntity<?> addSailor(@RequestBody Sailor sailor) {
 
         sailorService.registerNewSailor(sailor);
 
